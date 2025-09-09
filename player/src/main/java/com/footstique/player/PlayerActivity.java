@@ -97,7 +97,6 @@ public class PlayerActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         setContentView(R.layout.activity_player);
 
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false); // <-- أضف هذا السطر
         setContentView(R.layout.activity_player);
         playerView = findViewById(R.id.player_view);
         qualityBar = playerView.findViewById(R.id.quality_bar);
@@ -134,11 +133,7 @@ public class PlayerActivity extends AppCompatActivity {
         readStreamsFromIntent();
         groupByQuality();
         setupQualityButtons();
-        ViewCompat.setOnApplyWindowInsetsListener(playerUnlockControls, (v, windowInsets) -> {
-            int insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
-            v.setPadding(0, 0, 0, insets);
-            return windowInsets;
-        });
+
         hideSystemUI();
 
     }
