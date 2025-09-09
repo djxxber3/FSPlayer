@@ -25,6 +25,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackException;
@@ -82,15 +86,7 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        );
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
             Window window = getWindow();
             WindowManager.LayoutParams layoutParams = window.getAttributes();
@@ -99,6 +95,9 @@ public class PlayerActivity extends AppCompatActivity {
             window.setAttributes(layoutParams);
         }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        setContentView(R.layout.activity_player);
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false); // <-- أضف هذا السطر
         setContentView(R.layout.activity_player);
         playerView = findViewById(R.id.player_view);
         qualityBar = playerView.findViewById(R.id.quality_bar);
@@ -135,6 +134,13 @@ public class PlayerActivity extends AppCompatActivity {
         readStreamsFromIntent();
         groupByQuality();
         setupQualityButtons();
+        ViewCompat.setOnApplyWindowInsetsListener(playerUnlockControls, (v, windowInsets) -> {
+            int insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
+            v.setPadding(0, 0, 0, insets);
+            return windowInsets;
+        });
+        hideSystemUI();
+
     }
 
     @OptIn(markerClass = UnstableApi.class)
@@ -182,6 +188,19 @@ public class PlayerActivity extends AppCompatActivity {
         });
     }
 
+    private void hideSystemUI() {
+        WindowInsetsControllerCompat windowInsetsController =
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (windowInsetsController == null) {
+            return;
+        }
+        // إخفاء شريط الإشعارات العلوي وشريط التنقل السفلي
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+        // جعل الأشرطة تظهر بشكل مؤقت عند السحب من الحواف
+        windowInsetsController.setSystemBarsBehavior(
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        );
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -192,7 +211,12 @@ public class PlayerActivity extends AppCompatActivity {
             playStream(first);
         }
     }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // إعادة إخفاء أشرطة النظام لضمان بقاء وضع ملء الشاشة
+        hideSystemUI();
+    }
 
     @Override
     protected void onStop() {
