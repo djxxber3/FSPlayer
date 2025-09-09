@@ -1,29 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- الحالة عند الضغط على الزر -->
-    <item android:state_pressed="true">
-        <shape android:shape="rectangle">
-            <solid android:color="#FF4444"/>
-            <corners android:radius="6dp"/>
-            <stroke android:width="1dp" android:color="#FFFFFF"/>
-        </shape>
-    </item>
-    
-    <!-- الحالة عند تحديد الزر (الزر النشط) -->
-    <item android:state_selected="true">
-        <shape android:shape="rectangle">
-            <solid android:color="#00AA00"/>
-            <corners android:radius="6dp"/>
-            <stroke android:width="2dp" android:color="#FFFFFF"/>
-        </shape>
-    </item>
-    
-    <!-- الحالة الافتراضية -->
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="#80000000"/>
-            <corners android:radius="6dp"/>
-            <stroke android:width="1dp" android:color="#CCCCCC"/>
-        </shape>
-    </item>
+    <item android:drawable="@drawable/quality_button_selected_bg" android:state_selected="true" />
+    <item android:drawable="@drawable/quality_button_default_bg" />
 </selector>

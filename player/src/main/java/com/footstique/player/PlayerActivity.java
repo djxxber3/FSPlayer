@@ -283,46 +283,45 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-
     private void setupQualityButtons() {
         qualityBar.removeAllViews();
-        
+
         // إنشاء زر منفصل لكل Stream
         for (int i = 0; i < streamsList.size(); i++) {
             LocalStream stream = streamsList.get(i);
-            
+
             // إنشاء زر بـ style مخصص
             Button btn = new Button(this, null, 0, R.style.CustomQualityButton);
-            
+
             // النص على الزر هو الـ label أو نص افتراضي
-            String buttonText = stream.getLabel() != null && !stream.getLabel().isEmpty() 
-                               ? stream.getLabel() 
-                               : "Stream " + (i + 1);
+            String buttonText = stream.getLabel() != null && !stream.getLabel().isEmpty()
+                    ? stream.getLabel()
+                    : "Stream " + (i + 1);
             btn.setText(buttonText);
-            
+
             // عند الضغط على الزر، شغّل هذا الـ Stream مباشرة
             btn.setOnClickListener(v -> {
                 playStream(stream);
-                highlightSelectedButton(btn);
+                highlightSelectedButton(btn); // <-- هذا السطر يستدعي الدالة الثانية
             });
-            
+
             // إعدادات المظهر الإضافية
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, 
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
             );
             lp.setMargins(8, 8, 8, 8);
             btn.setLayoutParams(lp);
-            
+
             qualityBar.addView(btn);
-            
+
             // تحديد الزر الأول كمحدد افتراضياً
             if (i == 0) {
-                btn.setSelected(true);
+                btn.setSelected(true); // <-- هذا السطر يحدد الحالة الافتراضية
             }
         }
     }
-    
+
     // دالة لتمييز الزر المحدد
     private void highlightSelectedButton(Button selectedBtn) {
         // إعادة تعيين جميع الأزرار للحالة الطبيعية
@@ -333,7 +332,7 @@ public class PlayerActivity extends AppCompatActivity {
             }
         }
         // تمييز الزر المحدد
-        selectedBtn.setSelected(true);
+        selectedBtn.setSelected(true); // <-- هذا السطر يغير حالة الزر عند الضغط عليه
     }
     private void showLinksPopup(View anchor, String quality, List<LocalStream> links) {
         List<String> labels = new ArrayList<>();
