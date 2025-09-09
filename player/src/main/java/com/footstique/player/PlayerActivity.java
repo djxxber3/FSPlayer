@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackException;
@@ -64,7 +65,7 @@ public class PlayerActivity extends AppCompatActivity {
     private final Map<String, List<LocalStream>> byQuality = new LinkedHashMap<>();
 
     // ------------------- المتغيرات الجديدة للتحكم بالواجهة -------------------
-    private FrameLayout playerUnlockControls;
+    private ConstraintLayout playerUnlockControls;
     private FrameLayout playerLockControls;
     private ImageButton lockControlsButton;
     private ImageButton unlockControlsButton;

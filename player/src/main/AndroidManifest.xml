@@ -10,7 +10,11 @@
 			android:exported="true"
 			android:theme="@style/PlayerTheme"
 			android:supportsPictureInPicture="true"
-			android:resizeableActivity="true" />
+			android:resizeableActivity="true">
+
+
+
+		</activity>
 	</application>
 
 </manifest>
