@@ -1,6 +1,7 @@
 package com.footstique.player;
 
 import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -143,7 +144,7 @@ public class PlayerActivity extends AppCompatActivity {
         // وظيفة زر قفل الشاشة
         lockControlsButton.setOnClickListener(v -> {
             playerUnlockControls.setVisibility(INVISIBLE);
-            playerLockControls.setVisibility(View.VISIBLE);
+            playerLockControls.setVisibility(VISIBLE);
             qualityBar.setVisibility(INVISIBLE); // إخفاء الأزرار عند القفل
             isControlsLocked = true;
         });
@@ -151,8 +152,9 @@ public class PlayerActivity extends AppCompatActivity {
         // وظيفة زر فتح القفل
         unlockControlsButton.setOnClickListener(v -> {
             playerLockControls.setVisibility(INVISIBLE);
-            playerUnlockControls.setVisibility(View.VISIBLE);
+            playerUnlockControls.setVisibility(VISIBLE);
             isControlsLocked = false;
+            qualityBar.setVisibility(VISIBLE); // إخفاء الأزرار عند القفل
             playerView.showController(); // إظهار شريط التحكم مرة أخرى
         });
 
