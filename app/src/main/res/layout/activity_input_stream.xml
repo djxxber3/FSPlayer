@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/input_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Video / Stream URL"
+            android:inputType="textUri" />
+
+        <EditText
+            android:id="@+id/input_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Label (Quality or Name)"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/input_useragent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="User-Agent"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/input_referer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Referer"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/input_cookie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cookie"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/input_origin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Origin"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btn_play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="تشغيل" />
+
+    </LinearLayout>
+</ScrollView>

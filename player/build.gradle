@@ -1,0 +1,46 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+
+android {
+    namespace 'com.footstique.player'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 24
+
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    // الوحدة الأساسية لمشغل ExoPlayer من مكتبة Media3
+    implementation libs.androidx.media3.exoplayer
+    // دعم HLS للبث المباشر (.m3u8)
+    implementation libs.media3.exoplayer.hls
+    // واجهة المستخدم (PlayerView لعرض الفيديو)
+    implementation libs.androidx.media3.ui
+    implementation libs.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}
