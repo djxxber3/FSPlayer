@@ -101,7 +101,7 @@ public class PlayerActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         setContentView(R.layout.activity_player);
         playerView = findViewById(R.id.player_view);
-        qualityBar = findViewById(R.id.quality_bar);
+        qualityBar = playerView.findViewById(R.id.quality_bar);
         qualityBar.setVisibility(INVISIBLE);
         playerView.setControllerVisibilityListener(new PlayerView.ControllerVisibilityListener() {
             @Override
