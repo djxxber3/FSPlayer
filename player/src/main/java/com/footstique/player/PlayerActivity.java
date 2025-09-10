@@ -102,6 +102,9 @@ public class PlayerActivity extends AppCompatActivity {
     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
     setContentView(R.layout.activity_player); // أزلنا النداء المكرر
     playerView = findViewById(R.id.player_view);
+  
+        playerView.setControllerAnimationEnabled(false);
+ 
     qualityBar = playerView.findViewById(R.id.quality_bar);
     qualityBarContainer = playerView.findViewById(R.id.quality_bar_container);
     playerBottomControls = playerView.findViewById(R.id.player_bottom_controls);
@@ -110,15 +113,17 @@ public class PlayerActivity extends AppCompatActivity {
         playerView.setControllerVisibilityListener(new PlayerView.ControllerVisibilityListener() {
             @Override
             public void onVisibilityChanged(int visibility) {
-                // ربط الأزرار بظهور/اختفاء شريط التحكم
+               
                 if (isControlsLocked) {
                     // إذا كان مقفل، إخفاء الأزرار والـ controls
                     qualityBar.setVisibility(INVISIBLE);
                     playerUnlockControls.setVisibility(INVISIBLE);
+                    playerBottomControls.setVisibility(INVISIBLE);
                 } else {
                     // إظهار/إخفاء الأزرار مع شريط التحكم
                     qualityBar.setVisibility(visibility);
                     playerUnlockControls.setVisibility(visibility);
+                    playerBottomControls.setVisibility(visibility);
                 }
             }
         });
@@ -224,6 +229,7 @@ public class PlayerActivity extends AppCompatActivity {
             playerUnlockControls.setVisibility(INVISIBLE);
             playerLockControls.setVisibility(VISIBLE);
             qualityBar.setVisibility(INVISIBLE); // إخفاء الأزرار عند القفل
+            playerBottomControls.setVisibility(INVISIBLE); // إخفاء شريط التقدم أيضاً
             isControlsLocked = true;
         });
 
@@ -232,7 +238,8 @@ public class PlayerActivity extends AppCompatActivity {
             playerLockControls.setVisibility(INVISIBLE);
             playerUnlockControls.setVisibility(VISIBLE);
             isControlsLocked = false;
-            qualityBar.setVisibility(VISIBLE); // إخفاء الأزرار عند القفل
+            qualityBar.setVisibility(VISIBLE); // إظهار الأزرار عند إلغاء القفل
+            playerBottomControls.setVisibility(VISIBLE); // إظهار شريط التقدم أيضاً
             playerView.showController(); // إظهار شريط التحكم مرة أخرى
         });
 
@@ -428,6 +435,17 @@ public class PlayerActivity extends AppCompatActivity {
             // تحديد الزر الأول كمحدد افتراضياً
             if (i == 0) {
                 btn.setSelected(true); // <-- هذا السطر يحدد الحالة الافتراضية
+            }
+        }
+
+        // إظهار أو إخفاء الشريط حسب عدد الأزرار
+        if (streamsList.size() <= 1) {
+            if (qualityBarContainer != null) {
+                qualityBarContainer.setVisibility(View.GONE);
+            }
+        } else {
+            if (qualityBarContainer != null) {
+                qualityBarContainer.setVisibility(View.VISIBLE);
             }
         }
     }

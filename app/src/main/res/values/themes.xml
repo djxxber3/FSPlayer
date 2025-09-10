@@ -12,5 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    <!-- Global font applied to all text widgets -->
+    <item name="android:fontFamily">@font/cairo_bold</item>
+    <item name="fontFamily">@font/cairo_bold</item>
     </style>
 </resources>
