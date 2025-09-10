@@ -30,6 +30,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.core.graphics.Insets;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackException;
@@ -66,6 +67,9 @@ public class PlayerActivity extends AppCompatActivity {
     private ExoPlayer exoPlayer;
     private androidx.media3.ui.PlayerView playerView;
     private LinearLayout qualityBar;
+    private android.widget.HorizontalScrollView qualityBarContainer;
+    private LinearLayout playerBottomControls;
+    private View loadingSpinner;
     private final List<Map<String, Object>> streams = new ArrayList<>();
     private final Map<String, List<LocalStream>> byQuality = new LinkedHashMap<>();
 
@@ -95,12 +99,13 @@ public class PlayerActivity extends AppCompatActivity {
                     WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             window.setAttributes(layoutParams);
         }
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        setContentView(R.layout.activity_player);
-
-        setContentView(R.layout.activity_player);
-        playerView = findViewById(R.id.player_view);
-        qualityBar = playerView.findViewById(R.id.quality_bar);
+    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+    setContentView(R.layout.activity_player); // أزلنا النداء المكرر
+    playerView = findViewById(R.id.player_view);
+    qualityBar = playerView.findViewById(R.id.quality_bar);
+    qualityBarContainer = playerView.findViewById(R.id.quality_bar_container);
+    playerBottomControls = playerView.findViewById(R.id.player_bottom_controls);
+    loadingSpinner = playerView.findViewById(R.id.player_loading);
         qualityBar.setVisibility(INVISIBLE);
         playerView.setControllerVisibilityListener(new PlayerView.ControllerVisibilityListener() {
             @Override
@@ -135,8 +140,81 @@ public class PlayerActivity extends AppCompatActivity {
         groupByQuality();
         setupQualityButtons();
 
-        hideSystemUI();
+    // تفعيل وضع edge-to-edge مع معالجة insets للأزرار فقط
+    enableEdgeToEdgeForVideoOnly();
+    hideSystemUI();
 
+    }
+
+    // القيم الأساسية للحشوات حتى لا تتضاعف عند كل إعادة تطبيق للـ insets
+    private int baseQualityBarPadLeft, baseQualityBarPadTop, baseQualityBarPadRight, baseQualityBarPadBottom;
+    private int baseBottomControlsPadLeft, baseBottomControlsPadTop, baseBottomControlsPadRight, baseBottomControlsPadBottom;
+    private int baseUnlockBtnPadLeft, baseUnlockBtnPadTop, baseUnlockBtnPadRight, baseUnlockBtnPadBottom;
+
+    private void enableEdgeToEdgeForVideoOnly() {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        // حفظ القيم الأساسية
+        if (qualityBarContainer != null) {
+            baseQualityBarPadLeft = qualityBarContainer.getPaddingLeft();
+            baseQualityBarPadTop = qualityBarContainer.getPaddingTop();
+            baseQualityBarPadRight = qualityBarContainer.getPaddingRight();
+            baseQualityBarPadBottom = qualityBarContainer.getPaddingBottom();
+        }
+        if (playerBottomControls != null) {
+            baseBottomControlsPadLeft = playerBottomControls.getPaddingLeft();
+            baseBottomControlsPadTop = playerBottomControls.getPaddingTop();
+            baseBottomControlsPadRight = playerBottomControls.getPaddingRight();
+            baseBottomControlsPadBottom = playerBottomControls.getPaddingBottom();
+        }
+        if (unlockControlsButton != null) {
+            baseUnlockBtnPadLeft = unlockControlsButton.getPaddingLeft();
+            baseUnlockBtnPadTop = unlockControlsButton.getPaddingTop();
+            baseUnlockBtnPadRight = unlockControlsButton.getPaddingRight();
+            baseUnlockBtnPadBottom = unlockControlsButton.getPaddingBottom();
+        }
+
+        View root = findViewById(android.R.id.content);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            // ناخذ كل من أشرطة النظام + منطقة القطع (النوتش)
+            Insets sys = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets cut = insets.getInsets(WindowInsetsCompat.Type.displayCutout());
+            int insetLeft = Math.max(sys.left, cut.left);
+            int insetTop = Math.max(sys.top, cut.top);
+            int insetRight = Math.max(sys.right, cut.right);
+            int insetBottom = Math.max(sys.bottom, cut.bottom);
+
+            // الفيديو نفسه (Surface داخل PlayerView) يمتد لكامل الشاشة، لا نضيف حشوات له.
+            // نضيف الحشوات فقط لعناصر التحكم لكي لا تختلط مع النوتش أو أشرطة النظام.
+            if (qualityBarContainer != null) {
+                qualityBarContainer.setPadding(
+                        baseQualityBarPadLeft + insetLeft,
+                        baseQualityBarPadTop + insetTop, // حماية من النوتش / الشريط
+                        baseQualityBarPadRight + insetRight,
+                        baseQualityBarPadBottom
+                );
+            }
+            if (playerBottomControls != null) {
+                playerBottomControls.setPadding(
+                        baseBottomControlsPadLeft + insetLeft,
+                        baseBottomControlsPadTop,
+                        baseBottomControlsPadRight + insetRight,
+                        baseBottomControlsPadBottom + insetBottom // فوق شريط التنقل
+                );
+            }
+            if (unlockControlsButton != null) {
+                unlockControlsButton.setPadding(
+                        baseUnlockBtnPadLeft,
+                        baseUnlockBtnPadTop,
+                        baseUnlockBtnPadRight,
+                        baseUnlockBtnPadBottom + insetBottom
+                );
+            }
+            // ملاحظة: لا نضيف أي حشوات إلى الجذر playerUnlockControls حتى يبقى مركزه الحقيقي وسط الشاشة.
+            return insets; // لا نستهلكه حتى يبقى PlayerView ممتد
+        });
+        // نطلب تطبيق الـ Insets الآن (خاصة بعد إخفاء الأشرطة) لضمان أخذ قيم القطع
+        ViewCompat.requestApplyInsets(root);
     }
 
     @OptIn(markerClass = UnstableApi.class)
@@ -238,6 +316,17 @@ public class PlayerActivity extends AppCompatActivity {
                 public void onPlayerError(@NonNull PlaybackException error) {
                     Log.e(TAG, "Player Error: " + error.getErrorCodeName(), error);
                     Toast.makeText(PlayerActivity.this, "Playback Error: " + error.getErrorCodeName(), Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onPlaybackStateChanged(int playbackState) {
+                    if (loadingSpinner != null) {
+                        if (playbackState == Player.STATE_BUFFERING) {
+                            loadingSpinner.setVisibility(View.VISIBLE);
+                        } else if (playbackState == Player.STATE_READY || playbackState == Player.STATE_ENDED) {
+                            loadingSpinner.setVisibility(View.GONE);
+                        }
+                    }
                 }
             });
 
