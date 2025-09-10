@@ -36,8 +36,8 @@
         </HorizontalScrollView>
         <ImageButton
             android:id="@+id/exo_play_pause"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
             android:background="@drawable/transparent_circle_background"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
