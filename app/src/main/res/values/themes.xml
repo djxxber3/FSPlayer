@@ -12,8 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-    <!-- Global font applied to all text widgets -->
-    <item name="android:fontFamily">@font/cairo_bold</item>
-    <item name="fontFamily">@font/cairo_bold</item>
+    <!-- Global font now regular; specific components (e.g., quality buttons) will set bold explicitly -->
+    <item name="android:fontFamily">@font/cairo_regular</item>
+    <item name="fontFamily">@font/cairo_regular</item>
     </style>
 </resources>

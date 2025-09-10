@@ -4,8 +4,8 @@
         <item name="colorPrimaryDark">@color/exo_black_opacity_60</item>
         <item name="colorAccent">@color/exo_white</item>
         <!-- Inherit global font; keep explicit in case theme override order changes -->
-        <item name="android:fontFamily">@font/cairo_bold</item>
-        <item name="fontFamily">@font/cairo_bold</item>
+        <item name="android:fontFamily">@font/cairo_regular</item>
+        <item name="fontFamily">@font/cairo_regular</item>
     </style>
     <style name="PlayerControlButton">
         <item name="android:layout_width">52dp</item>
@@ -25,6 +25,8 @@
     <item name="android:textSize">14sp</item>
     <!-- نص رمادي شفاف قليلاً -->
     <item name="android:textColor">@color/quality_text_gray</item>
+       <item name="android:fontFamily">@font/cairo_bold</item>
+        <item name="fontFamily">@font/cairo_bold</item>
         <item name="android:background">@drawable/quality_button_selector</item>
         <item name="android:layout_margin">4dp</item>
         <item name="android:elevation">4dp</item>
